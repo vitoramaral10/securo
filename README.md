@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo.svg" width="80" alt="Securo logo" />
+  <img src="docs/logo.svg" width="200" alt="Securo logo" />
 </p>
 <h1 align="center">Securo</h1>
 <p align="center">
@@ -7,7 +7,11 @@
   <a href="https://www.gnu.org/licenses/agpl-3.0"><img src="https://img.shields.io/badge/License-AGPL--3.0-blue.svg" alt="License: AGPL-3.0" /></a>
 </p>
 
-Open-source personal finance manager. Track accounts, categorize transactions, and understand your spending — with optional bank sync.
+<h3 align="center">Finance apps want your data. This one doesn't.</h3>
+
+<p align="center">
+We believe personal finance should actually be <em>personal</em>. No corporation should sit between you and your financial data. Securo is an open-source finance manager that runs on your own infrastructure, giving you full visibility into your accounts, spending, and habits, without surrendering a single byte to third parties. Take back control.
+</p>
 
 ## Quick Start
 
