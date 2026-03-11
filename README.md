@@ -47,8 +47,6 @@ PLUGGY_CLIENT_SECRET=your-client-secret
 
 Then restart: `docker compose up`
 
-See the [full setup guide](https://securo.dev/getting-started/pluggy-setup/) for step-by-step instructions.
-
 ## Tech Stack
 
 | Layer | Stack |
