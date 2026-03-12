@@ -22,6 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
 
+# Dedicated non-root runtime user for app processes
+RUN useradd --system --create-home --uid 10001 appuser
+
 # Copy backend code and install deps
 COPY backend/ .
 RUN pip install --no-cache-dir .
