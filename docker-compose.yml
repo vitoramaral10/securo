@@ -1,25 +1,5 @@
 name: securo
 
-x-backend-env: &backend-env
-  DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/securo
-  SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-production}
-  DEBUG: ${DEBUG:-true}
-  FRONTEND_URL: http://localhost:3000
-  PLUGGY_CLIENT_ID: ${PLUGGY_CLIENT_ID:-}
-  PLUGGY_CLIENT_SECRET: ${PLUGGY_CLIENT_SECRET:-}
-  PLUGGY_OAUTH_REDIRECT_URI: http://localhost:3000/oauth/callback
-  REDIS_URL: redis://redis:6379/0
-
-x-backend-base: &backend-base
-  build: ./backend
-  environment: *backend-env
-  depends_on:
-    db: { condition: service_healthy }
-    redis: { condition: service_healthy }
-  volumes:
-    - ./backend:/app
-  restart: unless-stopped
-
 services:
   redis:
     image: redis:7-alpine
@@ -43,35 +23,25 @@ services:
       timeout: 3s
       retries: 5
 
-  backend:
-    <<: *backend-base
-    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
-    ports:
-      - "8000:8000"
-
-  frontend:
+  app:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "3000:5173"
+      - "80:80"
     environment:
-      BACKEND_URL: http://backend:8000
-      FRONTEND_URL: http://localhost:3000
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/securo
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-change-in-production}
+      DEBUG: ${DEBUG:-true}
+      FRONTEND_URL: http://localhost
+      PLUGGY_CLIENT_ID: ${PLUGGY_CLIENT_ID:-}
+      PLUGGY_CLIENT_SECRET: ${PLUGGY_CLIENT_SECRET:-}
+      PLUGGY_OAUTH_REDIRECT_URI: http://localhost/oauth/callback
+      REDIS_URL: redis://redis:6379/0
     depends_on:
-      - backend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      db: { condition: service_healthy }
+      redis: { condition: service_healthy }
     restart: unless-stopped
-
-  celery-worker:
-    <<: *backend-base
-    command: celery -A app.worker worker --loglevel=info
-
-  celery-beat:
-    <<: *backend-base
-    command: celery -A app.worker beat --loglevel=info
 
 volumes:
   pgdata:
