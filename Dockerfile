@@ -22,12 +22,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     supervisor \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps
-COPY backend/pyproject.toml ./
-RUN pip install --no-cache-dir -e .
-
-# Copy backend code
+# Copy backend code and install deps
 COPY backend/ .
+RUN pip install --no-cache-dir .
 
 # Copy built frontend into nginx serve path
 COPY --from=frontend-build /app/dist /usr/share/nginx/html
